@@ -28,3 +28,17 @@ parseMessage (rgroups "^E\\ (\\d+)\\ (\\d+)\\ (.*)"
               -> [(readMaybe -> Just errNo), (readMaybe -> Just timestamp), msg])  = LogMessage (Error errNo) timestamp msg
 
 parseMessage str                                                                   = Unknown str
+
+parse :: String -> [LogMessage]
+parse = map parseMessage . lines
+
+
+
+--data MessageTree = Leaf
+--                 | Node MessageTree LogMessage MessageTree
+--  deriving (Show, Eq)
+
+insert :: LogMessage -> MessageTree -> MessageTree
+insert (Unknown _) tree = tree
+insert msg@(LogMessage _ _ _) Leaf = Node Leaf msg Leaf
+-- TODO: Rest of the case(s)
