@@ -83,3 +83,4 @@ someFunc = do
   putStrLn (show $ sumDigits [16,7,12,5])
   putStrLn (show $ validate 4012888888881881)
   putStrLn (show $ validate 4012888888881882)
+  putStrLn (show $ hanoi 2 "a" "b" "c")
