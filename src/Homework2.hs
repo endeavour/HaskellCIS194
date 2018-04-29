@@ -1,6 +1,5 @@
 {-# OPTIONS_GHC -Wall #-}            -- Shows all warnings
 {-# LANGUAGE ViewPatterns #-}        -- Neat, let's us do something similar to F# Active Patterns :)
-{-# LANGUAGE ScopedTypeVariables #-}
 
 module Homework2 where
 import Log

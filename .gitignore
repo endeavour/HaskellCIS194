@@ -1,3 +1,5 @@
 .stack-work/
+.idea/workspace.xml
 HaskellTutorial.cabal
+out/
 *~
