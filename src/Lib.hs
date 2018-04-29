@@ -6,7 +6,8 @@ import Data.Functor
 import Data.Monoid
 import Lesson1
 import Homework1
-
+import Homework2
+import Log
 
 someFunc :: IO ()
 someFunc = do
@@ -23,3 +24,10 @@ someFunc = do
   putStrLn (show $ validate 4012888888881881)
   putStrLn (show $ validate 4012888888881882)
   putStrLn (show $ hanoi 2 "a" "b" "c")
+
+  -- xs <- testParse parse 1000000 "homework2/error.log"
+  -- mapM_ (putStrLn . show) xs
+
+  wrong <- testWhatWentWrong parse whatWentWrong "homework2/sample.log"
+
+  mapM_ (putStrLn . show) wrong
