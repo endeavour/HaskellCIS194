@@ -51,7 +51,6 @@ whatWentWrong :: [LogMessage] -> [String]
 whatWentWrong xs =
   mapMaybe onlySevere $ inOrder $ build xs
   where
-    onlySevere msg =
-                      case msg of
-                      LogMessage (Error n) _ txt | n > 50 -> Just txt
-                      _ -> Nothing
+    onlySevere msg = case msg of
+                     LogMessage (Error n) _ txt | n > 50 -> Just txt
+                     _ -> Nothing
