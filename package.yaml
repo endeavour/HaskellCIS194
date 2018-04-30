@@ -25,6 +25,7 @@ dependencies:
 - ilist
 - unordered-containers
 - split
+- semigroups
 
 library:
   source-dirs: src
