@@ -1,6 +1,5 @@
 module Homework4 where
 
---import Data.List
 import Data.Monoid
 
 fun1 :: [Integer] -> Integer
