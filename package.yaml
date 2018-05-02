@@ -26,6 +26,7 @@ dependencies:
 - unordered-containers
 - split
 - semigroups
+- containers
 
 library:
   source-dirs: src
