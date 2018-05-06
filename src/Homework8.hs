@@ -1,4 +1,3 @@
-{-# LANGUAGE ScopedTypeVariables #-}
 module Homework8 where
 import Employee
 import Data.Tree
@@ -11,18 +10,28 @@ instance Monoid GuestList where
   mappend (GL e1 f1) (GL e2 f2) = GL (e1 ++ e2) (f1 + f2)
 
 moreFun :: GuestList -> GuestList -> GuestList
-moreFun gl1@(GL _ f1) gl2@(GL _ f2) = if f1 >= f2 then gl1 else gl2
+moreFun = max
 
--- Note: This is actually part of the standard library now... (named foldTree)
-treeFold :: (s -> a -> s) -> s -> Tree a -> s
-treeFold f initialState tree =
-  foldl f initialState flattenedTree
-  where
-    flattenedTree = flatten tree
+treeFold :: (a -> [b] -> b) -> Tree a -> b
+treeFold f (Node root xs) = f root (map (treeFold f) xs)
 
 nextLevel :: Employee -> [(GuestList, GuestList)] -> (GuestList, GuestList)
-nextLevel employee guestlists = undefined
+nextLevel boss results = (withBoss, withoutBoss) where
+    withoutBoss = mconcat (map (uncurry moreFun) results)
+    withBoss = glCons boss (mconcat (map snd results))
 
 maxFun :: Tree Employee -> GuestList
-maxFun = undefined
+maxFun = uncurry moreFun . treeFold nextLevel
 
+printGuestList :: GuestList -> String
+printGuestList(GL employees fun) =
+                    "Fun score : "
+                    ++ show fun ++ "\n"
+                    ++ unlines (map empName employees)
+main :: IO ()
+main = do
+  contents <- readFile "homework8/company.txt"
+  let employeeTree = read contents
+      guestList = maxFun employeeTree
+      prettyStr = printGuestList guestList
+  putStrLn prettyStr
