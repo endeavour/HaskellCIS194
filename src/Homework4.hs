@@ -47,12 +47,12 @@ map' f = foldr (\next state -> f next : state) []
 -- myFoldl :: (a -> b -> a) -> a -> [b] -> a
 -- myFoldl f base xs = foldr ...
 
--- Not quite a cartesian product as such... not sure what the mathematical name for this is?
-cartProd :: Integer -> [(Integer, Integer)]
-cartProd n = [(i,j) | i <- [1..n], j <- [i..n]]
+-- Chooses all possible 2-combinations o(i.e. pairs (i,j)) from the set [1..n]
+combinations :: Integer -> [(Integer, Integer)]
+combinations n = [(i,j) | i <- [1..n], j <- [i..n]]
 
 sieveSundaram :: Integer -> [Integer]
 sieveSundaram n =
-  let prods    = map (\(i,j) -> i + j + 2*i*j) $ cartProd n
+  let prods    = map (\(i,j) -> i + j + 2*i*j) $ combinations n
       leftover = filter (\x -> not $ elem x prods) [1..n]
   in map (\n -> 2*n + 1) leftover
