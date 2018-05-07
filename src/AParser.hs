@@ -82,8 +82,7 @@ abParser :: Parser (Char, Char)
 abParser = (,) <$> char 'a' <*> char 'b'
 
 abParser_ :: Parser ()
--- does Haskell have a built-in equivalent of 'ignore' in F#?
-abParser_ = (\_ -> ()) <$> abParser
+abParser_ = const () <$> abParser
 
 intPair :: Parser [Integer]
 intPair = (\x _ y -> [x,y]) <$> posInt <*> char ' ' <*> posInt
