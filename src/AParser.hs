@@ -63,4 +63,37 @@ first f = \(a,c) -> ((f a), c)
 
 instance Functor Parser
   where
-    fmap f (Parser parse) = Parser (\str -> first f <$> parse str)
+    fmap f (Parser parse) = Parser ((first f <$>) . parse)
+
+instance Applicative Parser
+  where
+    pure x = Parser (\_ -> Just (x, mempty))
+    -- Parser (a -> b) -> Parser a -> Parser b
+    -- probably a much more succinct way of writing this using fmap/first but my brain hurts...
+    (<*>) (Parser p1) =
+      \(Parser p2) ->
+        Parser (\str -> case p1 str of
+                        Nothing -> Nothing
+                        Just (f, remaining) -> case p2 remaining of
+                                                 Nothing -> Nothing
+                                                 Just (a, s) -> Just (f a, s))
+
+abParser :: Parser (Char, Char)
+abParser = (,) <$> char 'a' <*> char 'b'
+
+abParser_ :: Parser ()
+-- does Haskell have a built-in equivalent of 'ignore' in F#?
+abParser_ = (\_ -> ()) <$> abParser
+
+intPair :: Parser [Integer]
+intPair = (\x _ y -> [x,y]) <$> posInt <*> char ' ' <*> posInt
+
+instance Alternative Parser where
+  empty = Parser (\_ -> Nothing)
+  (<|>) (Parser p1) (Parser p2) = Parser (\str -> p1 str <|> p2 str)
+
+intOrUppercase :: Parser ()
+intOrUppercase =
+  let uppercaseParser = (\_ -> ()) <$> satisfy (\c -> c >= 'A' && c <= 'Z')
+      intParser = (\_ -> ()) <$> posInt
+  in uppercaseParser <|> intParser
