@@ -67,7 +67,7 @@ instance Functor Parser
 
 instance Applicative Parser
   where
-    pure x = Parser (\_ -> Just (x, mempty))
+    pure x = Parser (\s -> Just (x, s))
     -- Parser (a -> b) -> Parser a -> Parser b
     -- probably a much more succinct way of writing this using fmap/first but my brain hurts...
     (<*>) (Parser p1) =

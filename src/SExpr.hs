@@ -1,3 +1,4 @@
+{-# LANGUAGE ScopedTypeVariables #-}
 {- CIS 194 HW 11
    due Monday, 8 April
 -}
@@ -6,26 +7,29 @@ module SExpr where
 
 import AParser
 import Control.Applicative
+import Data.Char
 
 ------------------------------------------------------------
 --  1. Parsing repetitions
 ------------------------------------------------------------
 
 zeroOrMore :: Parser a -> Parser [a]
-zeroOrMore p = undefined
+zeroOrMore p = oneOrMore p <|> pure []
 
 oneOrMore :: Parser a -> Parser [a]
-oneOrMore p = undefined
+oneOrMore p = liftA2 (:) p (zeroOrMore p)
 
 ------------------------------------------------------------
 --  2. Utilities
 ------------------------------------------------------------
 
 spaces :: Parser String
-spaces = undefined
+spaces = zeroOrMore (satisfy isSpace)
 
 ident :: Parser String
-ident = undefined
+ident = (:) <$> (satisfy isAlpha) <*> (zeroOrMore $ satisfy isAlphaNum)
+        -- alternatively, liftA2 (:) (satisfy isAlpha) (zeroOrMore $ satisfy isAlphaNum)
+
 
 ------------------------------------------------------------
 --  3. Parsing S-expressions
@@ -44,3 +48,12 @@ data Atom = N Integer | I Ident
 data SExpr = A Atom
            | Comb [SExpr]
   deriving Show
+
+atom  :: Parser Atom
+atom = (N <$> posInt) <|> (I <$> ident)
+
+parseSExpr :: Parser SExpr
+parseSExpr = spaces *> (
+               (A <$> atom) <|> (Comb <$> ( char '(' *> oneOrMore parseSExpr <* char ')'))
+             ) <* spaces
+
