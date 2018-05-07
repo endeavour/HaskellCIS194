@@ -94,6 +94,6 @@ instance Alternative Parser where
 
 intOrUppercase :: Parser ()
 intOrUppercase =
-  let uppercaseParser = (\_ -> ()) <$> satisfy (\c -> c >= 'A' && c <= 'Z')
-      intParser = (\_ -> ()) <$> posInt
+  let uppercaseParser = const () <$> satisfy (\c -> c >= 'A' && c <= 'Z')
+      intParser       = const () <$> posInt
   in uppercaseParser <|> intParser
