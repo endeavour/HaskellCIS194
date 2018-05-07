@@ -28,6 +28,7 @@ dependencies:
 - semigroups
 - containers
 - mtl
+- MonadRandom
 
 library:
   source-dirs: src
